@@ -9,7 +9,7 @@ def scraping():
     Datas = []
     FullData = []
     
-    for i in tqdm(range(1,2)):
+    for i in tqdm(range(1,256)):
         url = "https://www.japscan.me/mangas/"+str(i)
         driver = webdriver.Firefox(executable_path=r'C:\Users\user\Downloads\geckodriver-v0.26.0-win64\geckodriver.exe')
         driver.get(url)
