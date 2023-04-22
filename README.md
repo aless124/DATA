@@ -1,6 +1,6 @@
 # DATA
  
-A simple Data project using Selenium, BeautifulSoup and python.
+A simple Data made for school , we used Selenium, BeautifulSoup and python.
 
 Were trying to scrap [ReaperScan](https://reaperscans.com/) + japscan, []() and add both information in a .csv file
 
