@@ -10,6 +10,10 @@ app.config['MONGO_DBNAME'] = 'final_exam'
 app.config['MONGO_URI'] = 'mongodb://localhost:27017/final_exam'
 mongo = PyMongo(app)
 collection = mongo.db.final_exam
+for doc in collection.find():
+    titre = str(doc['Titre']).replace('\n', '').replace('\r', '').strip()
+    collection.update_one({'_id': doc['_id']}, {'$set': {'Titre': titre}})
+
 # Récupérer tous les documents de la collection
 @app.route('/documents', methods=['GET'])
 def get_all_documents():
@@ -33,11 +37,11 @@ def get_document_by_id(document_id):
 # Ajouter un nouveau document
 @app.route('/documents', methods=['POST'])
 def add_document():
-    name = request.json['name']
-    description = request.json['description']
-    document_id = mongo.db.collection.insert({'name': name, 'description': description})
-    new_document = mongo.db.collection.find_one({'_id': document_id })
-    output = {'id': str(new_document['_id']), 'name': new_document['name'], 'description': new_document['description']}
+    titre = request.json['titre']
+    origine = request.json['origine']
+    document_id = collection.insert_one({'Titre': titre, 'Origine': origine}).inserted_id
+    new_document = collection.find_one({'_id': document_id })
+    output = {'id': str(new_document['_id']), 'Titre': new_document['Titre'], 'Origine': new_document['Origine']}
     return jsonify({'result': output})
 
 # Mettre à jour un document
@@ -71,25 +75,36 @@ def get_document_by_limit(limit):
     documents = collection.find().limit(limit)
     output = []
     for document in documents:
-        output.append({'id': str(document['_id']), 'Titre': document['Titre'].strip(), 'Origine': document['Origine']})
+        output.append({'id': str(document['_id']), 'Titre': document['Titre'], 'Origine': document['Origine']})
     return jsonify({'result': output})
 
 # Recuperer uniquement les documents dont le titre contient un mot
 @app.route('/documents/&titre=<string:titre>', methods=['GET'])
 def get_document_by_titre(titre):
-    print("debug",titre)
-    print(collection.find_one()['Titre'])
-    titre = "\r\n"+titre+"\r\n"
     document = collection.find_one({'Titre': titre})
-
-    print("debug oo",document)
     if document:
-        output = {'id': str(document['_id']), 'Titre': document['Titre'].strip(), 'Origine': document['Origine']}
+        output = {'id': str(document['_id']), 'Titre': document['Titre'], 'Origine': document['Origine']}
     else:
         output = 'Document not found'
     return jsonify({'result': output})
 
-# affiche le titre du premier document
+# Recuperer uniquement les documents avec les origines
+@app.route('/documents/&origine=<string:origine>', methods=['GET'])
+def get_document_by_origine(origine):
+    def checkRequest(Req):
+        if Req == "japon":
+            Req = "Japon"
+        elif Req.lower() == "coreedusud" or Req.lower() == "coréedusud":
+            Req = "CoréeDuSud"
+        elif Req.lower() == "chine":
+            Req = "Chine"
+        return Req
+    origine = checkRequest(origine)
+    documents = collection.find({'Origine': origine})
+    output = []
+    for document in documents:
+        output.append({'id': str(document['_id']), 'Titre': document['Titre'], 'Origine': document['Origine']})
+    return jsonify({'result': output})
 
 
 #app.run()
