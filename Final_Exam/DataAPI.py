@@ -79,11 +79,12 @@ def get_document_by_limit(limit):
 def get_document_by_titre(titre):
     print("debug",titre)
     print(collection.find_one()['Titre'])
-    document = str(collection.find_one({'Titre': titre})).strip()
+    titre = "\r\n"+titre+"\r\n"
+    document = collection.find_one({'Titre': titre})
 
     print("debug oo",document)
     if document:
-        output = {'id': str(document['_id']), 'Titre': document['Titre'], 'Origine': document['Origine']}
+        output = {'id': str(document['_id']), 'Titre': document['Titre'].strip(), 'Origine': document['Origine']}
     else:
         output = 'Document not found'
     return jsonify({'result': output})
