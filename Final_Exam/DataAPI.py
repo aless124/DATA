@@ -1,13 +1,20 @@
 from flask import Flask, jsonify, request
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+USERNAME = os.getenv('USERNAME')
+PASSWORD = os.getenv('PASSWORD')
+
+
 
 app = Flask(__name__)  # Pour initialiser l'application
 app.config["DEBUG"] = True # Pour activer le débogage et le rechargement automatique du code
 
-
 app.config['MONGO_DBNAME'] = 'final_exam'
-app.config['MONGO_URI'] = 'mongodb://localhost:27017/final_exam'
+app.config['MONGO_URI'] = 'mongodb+srv://'+USERNAME+':'+PASSWORD+'@cluster0.tzf6zx8.mongodb.net/final_exam'
 mongo = PyMongo(app)
 collection = mongo.db.final_exam
 for doc in collection.find():
