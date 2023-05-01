@@ -86,7 +86,7 @@ def get_document_by_limit(limit):
 def get_document_by_titre(titre):
     document = collection.find_one({'Titre': titre})
     if document:
-        output = {'id': str(document['_id']), 'Titre': document['Titre'], 'Origine': document['Origine']}
+        output = {'id': str(document['_id']), 'Titre': document['Titre'], 'Origine': document['Origine'], 'Total Chapter': document['Total Chapter'],'Date de sortie': document['Date de sortie'],'Type': document['Type'],'Image': document['Image'],'Source Statuts':document['Source Statuts']}
     else:
         output = 'Document not found'
     return jsonify({'result': output})
@@ -106,7 +106,7 @@ def get_document_by_origine(origine):
     documents = collection.find({'Origine': origine})
     output = []
     for document in documents:
-        output.append({'id': str(document['_id']), 'Titre': document['Titre'], 'Origine': document['Origine']})
+        output.append({'id': str(document['_id']), 'Titre': document['Titre'], 'Origine': document['Origine'], 'Total Chapter': document['Total Chapter'],'Date de sortie': document['Date de sortie'],'Type': document['Type'],'Image': document['Image'],'Source Statuts':document['Source Statuts']})
     return jsonify({'result': output})
 
 
