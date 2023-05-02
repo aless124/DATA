@@ -1,12 +1,25 @@
 from flask import Flask, jsonify, request
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
+<<<<<<< Updated upstream
+=======
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+USERNAME = os.getenv('USERNAME')
+PASSWORD = os.getenv('PASSWORD')
+
+print(USERNAME)
+print(PASSWORD)
+>>>>>>> Stashed changes
 
 app = Flask(__name__)  # Pour initialiser l'application
 app.config["DEBUG"] = True # Pour activer le débogage et le rechargement automatique du code
 
 
 app.config['MONGO_DBNAME'] = 'final_exam'
+<<<<<<< Updated upstream
 app.config['MONGO_URI'] = 'mongodb://localhost:27017/final_exam'
 mongo = PyMongo(app)
 collection = mongo.db.final_exam
@@ -16,6 +29,16 @@ def FixTitle():
     for doc in collection.find():
         titre = str(doc['Titre']).replace('\n', '').replace('\r', '').strip()
         collection.update_one({'_id': doc['_id']}, {'$set': {'Titre': titre}})
+=======
+#app.config['MONGO_URI'] = 'mongodb://localhost:27017/final_exam'
+app.config['MONGO_URI'] = 'mongodb+srv://'+USERNAME+':'+PASSWORD+'@cluster0.tzf6zx8.mongodb.net/final_exam'
+mongo = PyMongo(app)
+collection = mongo.db.final_exam
+
+for doc in collection.find():
+    titre = str(doc['Titre']).replace('\n', '').replace('\r', '').strip()
+    collection.update_one({'_id': doc['_id']}, {'$set': {'Titre': titre}})
+>>>>>>> Stashed changes
 
 # Récupérer tous les documents de la collection
 @app.route('/documents', methods=['GET'])
