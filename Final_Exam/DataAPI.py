@@ -10,8 +10,6 @@ load_dotenv()
 USERNAME = os.getenv('USERNAME')
 PASSWORD = os.getenv('PASSWORD')
 
-print(USERNAME)
-print(PASSWORD)
 
 
 app = Flask(__name__)  # Pour initialiser l'application
@@ -19,15 +17,18 @@ app.config["DEBUG"] = True # Pour activer le débogage et le rechargement automa
 
 
 app.config['MONGO_DBNAME'] = 'final_exam'
-app.config['MONGO_URI'] = 'mongodb://localhost:27017/final_exam'
+#app.config['MONGO_URI'] = 'mongodb://localhost:27017/final_exam'
+app.config['MONGO_URI'] = 'mongodb+srv://'+USERNAME+':'+PASSWORD+'@cluster0.tzf6zx8.mongodb.net/final_exam'
+
 mongo = PyMongo(app)
 collection = mongo.db.final_exam
-
-
 def FixTitle():
+    count = 0
     for doc in collection.find():
         titre = str(doc['Titre']).replace('\n', '').replace('\r', '').strip()
         collection.update_one({'_id': doc['_id']}, {'$set': {'Titre': titre}})
+        print(count)
+        count += 1
 
 #app.config['MONGO_URI'] = 'mongodb://localhost:27017/final_exam'
 app.config['MONGO_URI'] = 'mongodb+srv://'+USERNAME+':'+PASSWORD+'@cluster0.tzf6zx8.mongodb.net/final_exam'
